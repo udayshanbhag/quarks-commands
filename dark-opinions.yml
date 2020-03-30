@@ -1,0 +1,3 @@
+properties:
+        postgres:
+                password: cust_password

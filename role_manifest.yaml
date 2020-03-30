@@ -1,0 +1,63 @@
+---
+name: postgres
+
+instance_groups:
+  - name: postgres
+    azs: [z1]
+    networks: [{name: default }]
+    persistent_disk: 2048
+    stemcell: default
+    vm_type: default
+    instances: 1
+    jobs:
+      - name: postgres
+        release: postgres
+        properties:
+           bosh_containerization:
+             run:                       # Runtime configuration
+               scaling:                 # Auto-scaling limits
+                 min: 1
+                 max: 1
+                 memory: 256              # Memory request for each instance (MB)
+                 virtual-cpus: 2          # CPU request for each instance
+               ports:
+                 - name: postgres-port 
+                   protocol: TCP            # TCP or UDP
+                   external: 5432           # Port visible outside the container
+                   internal: 5432           # Port inside the container
+                   public: true            # Whether to expose to outside the cluster
+           postgres:
+            config:
+              max_connections: 500
+            databases:
+              - name:       diegodb
+                extensions: [citext]
+                users:      [hank]
+
+
+            hba:
+              - host all all 0.0.0.0/0 md5
+              - host all all ::/0 md5
+
+            users:
+              - username: hank
+                password: propane
+                admin: true
+
+stemcells:
+  - alias:   default
+    os:      ubuntu-xenial
+    version: latest
+
+update:
+  canaries: 1
+  canary_watch_time: 1000-120000
+  max_in_flight: 50
+  serial: false
+  update_watch_time: 1000-120000
+
+releases:
+- name:    postgres
+  version: 3.2.1
+  url:     https://github.com/cloudfoundry-community/postgres-boshrelease/releases/download/v3.2.1/postgres-3.2.1.tgz
+  sha1:    b687753085f770807603642b4bae6c17a483900b[.

@@ -1,0 +1,96 @@
+---
+kube:
+  auth: ~
+  external_ips: []
+
+  # Whether HostPath volume mounts are available
+  hostpath_available: false
+
+  limits:
+    nproc:
+      hard: ""
+      soft: ""
+  organization: ""
+  psp: {}
+  registry:
+    hostname: "docker.io"
+    username: ""
+    password: ""
+
+  # Increment this counter to rotate all generated secrets
+  secrets_generation_counter: 1
+
+  storage_class:
+    persistent: "persistent"
+    shared: "shared"
+config:
+  # Flag to activate high-availability mode
+  HA: false
+
+  # Flag to verify instance counts against HA minimums
+  HA_strict: true
+
+  # Global memory configuration
+  memory:
+    # Flag to activate memory requests
+    requests: false
+
+    # Flag to activate memory limits
+    limits: false
+
+  # Global CPU configuration
+  cpu:
+    # Flag to activate cpu requests
+    requests: false
+
+    # Flag to activate cpu limits
+    limits: false
+
+  # Flag to specify whether to add Istio related annotations and labels
+  use_istio: false
+
+bosh:
+  instance_groups: []
+services:
+  loadbalanced: false
+secrets: {}
+env:
+  KUBERNETES_CLUSTER_DOMAIN: ~
+
+# The sizing section contains configuration to change each individual instance
+# group. Due to limitations on the allowable names, any dashes ("-") in the
+# instance group names are replaced with underscores ("_").
+sizing:
+  # The postgres instance group contains the following jobs:
+  #
+  # postgres
+  postgres:
+    # Node affinity rules can be specified here
+    affinity: {}
+
+    # The postgres instance group cannot be scaled.
+    count: ~
+
+    # Unit [millicore]
+    cpu:
+      request: ~
+      limit: ~
+
+    # Unit [MiB]
+    memory:
+      request: ~
+      limit: ~
+
+enable: {}
+ingress:
+  # ingress.annotations allows specifying custom ingress annotations that gets
+  # merged to the default annotations.
+  annotations: {}
+
+  # ingress.enabled enables ingress support - working ingress controller
+  # necessary.
+  enabled: false
+
+  # ingress.tls.crt and ingress.tls.key, when specified, are used by the TLS
+  # secret for the Ingress resource.
+  tls: {}
